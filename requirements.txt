@@ -1,0 +1,4 @@
+Flask
+Watchdog
+psutil
+colorama
