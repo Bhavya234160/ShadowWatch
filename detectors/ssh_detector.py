@@ -1,5 +1,12 @@
 import re
 import subprocess
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from engine.logger import accept_event
 
 def read_authlog(n=30):
     result = subprocess.run(["tail", f"-n{n}", "/var/log/auth.log"], capture_output=True, text=True)
@@ -30,26 +37,24 @@ def convert_to_event(log_line):
     target_user = extract_user(log_line)
     time = extract_time(log_line) 
     event = {
-        "Event Type": "SSH Failure",
-        "Severity": "MEDIUM",
-        "Attacker's IP": source_ip,
-        "Target user": target_user,
-        "Details": "Failed SSH login attempt",
-        "Timestamp": time
+        "event_type": "SSH Failure",
+        "severity": "MEDIUM",
+        "timestamp": time,
+        "metadata": {
+            "source_ip": source_ip,
+            "target_user": target_user,
+            "details": "Failed SSH login attempt"
+        }
     }
     return event
 
 def main():
     lines = read_authlog(50)
     events = []
-
     for line in lines:
         if determine_failure(line):
             event = convert_to_event(line)
             events.append(event)
-
-    for e in events:
-        print(e)
-
+            accept_event(event)
 if __name__ == "__main__":
     main()

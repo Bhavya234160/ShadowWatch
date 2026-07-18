@@ -27,12 +27,14 @@ def build_event(event_type, file_path):
     filename = os.path.basename(file_path)
     severity = SEVERITY_MAP.get(filename, "NOT CONFIRMED")
     event = {
-        "Event Type": event_type,
-        "Severity": severity,
-        "File name": filename,
-        "Path to the file" : file_path,
-        "Operation Type": f"{filename} was {event_type.replace('file_', '')}.",
-        "Timestamp": datetime.now().isoformat()
+        "event_type": event_type,
+        "severity": severity,
+        "timestamp": datetime.now().isoformat(),
+        "metadata": {
+            "file_name": filename,
+            "path_to_file": file_path,
+            "operation_type": f"{filename} was {event_type.replace('file_', '')}."
+        }
     }
     return event
 
