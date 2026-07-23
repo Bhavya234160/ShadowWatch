@@ -29,7 +29,7 @@ def build_event(event_type, file_path):
     event = {
         "event_type": event_type,
         "severity": severity,
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now().astimezone().isoformat(),
         "metadata": {
             "file_name": filename,
             "path_to_file": file_path,

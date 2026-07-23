@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ShadowWatch Dashboard</title>
+</head>
+<body>
+    <h1>ShadowWatch Dashboard</h1>
+    <p>Total Incidents: {{total_incidents}}</p>
+    <hr>
+    {% for incident in incidents %}
+    <div>
+        <h3>{{ incident.incident_type }}</h3>
+        <p>Severity : {{incident.severity}}</p>
+        <p>Timestamp : {{incident.timstamp}}</p>
+    </div>
+    <hr>
+    {% endfor %}
+</body>
+</html>

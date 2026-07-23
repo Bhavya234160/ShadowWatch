@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as ET
+import time
+from datetime import datetime
 from pathlib import Path
 import sys
 
@@ -20,7 +22,11 @@ def build_event(root):
         address = host.find("address").get("addr")
         times = host.find("times")
         target_ip = address
-        timestamp = root.get("startstr")            
+        start_str = root.get("start")
+        if start_str:
+            timestamp = datetime.fromtimestamp(int(start_str), tz=pytz.utc).astimezone().isoformat()
+        else:
+            timestamp = datetime.now().astimezone().isoformat()            
         ports = []
         for port in host.findall("ports/port"):
             ports.append({
@@ -53,10 +59,10 @@ def build_event(root):
         "event_type": "port_scan",
         "severity": severity,
         "timestamp": timestamp,
-        "target_ip": target_ip,
         "details": f"Detected a port scan with {len(hosts)} hosts and {number_of_ports_scanned} ports scanned.",
         "metadata": {
             "host_count": len(hosts),
+            "target_ip": target_ip,
             "ports_scanned": number_of_ports_scanned,
             "open_ports": open_ports,
         }

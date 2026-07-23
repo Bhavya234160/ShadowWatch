@@ -1,5 +1,7 @@
 import re
 import subprocess
+import time
+from datetime import datetime
 from pathlib import Path
 import sys
 
@@ -23,10 +25,8 @@ def extract_ip(log_line):
     return match.group(1) if match else ""
 
 def extract_time(log_line):
-    match = re.search(r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?)', log_line)
-    if match:
-        return match.group(1)
-    return None
+    match = re.search(r'([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})', log_line)
+    return match.group(1) if match else None
 
 def extract_user(log_line):
     match = re.search(r'Failed password for (?:invalid user )?(\w+)', log_line)
@@ -36,16 +36,21 @@ def convert_to_event(log_line):
     source_ip = extract_ip(log_line)
     target_user = extract_user(log_line)
     time = extract_time(log_line) 
-    event = {
-        "event_type": "SSH Failure",
-        "severity": "MEDIUM",
-        "timestamp": time,
-        "metadata": {
-            "source_ip": source_ip,
-            "target_user": target_user,
-            "details": "Failed SSH login attempt"
+    if time:
+        timestamp = datetime.strptime(time, "%b %d %H:%M:%S")
+        timestamp = timestamp.replace(year = datetime.now().year).astimezone().isoformat()
+    else:
+        timestamp = datetime.now().astimezone().isoformat()
+        event = {
+            "event_type": "ssh_failure",
+            "severity": "MEDIUM",
+            "timestamp": timestamp,
+            "metadata": {
+                "source_ip": source_ip,
+                "target_user": target_user,
+                "details": "Failed SSH login attempt"
+            }
         }
-    }
     return event
 
 def main():
