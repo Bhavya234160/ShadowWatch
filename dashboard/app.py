@@ -49,7 +49,7 @@ def incident_details(incident_id):
         return "Incident not found",404
 
     return render_template(
-        "incident_details.html",
+        "index.html",
         incident=incidents[incident_id]
     )
 

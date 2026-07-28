@@ -1,4 +1,3 @@
-#IMPORTING LOGGER MODULE
 from pathlib import Path
 import sys
 ROOT = Path(__file__).resolve().parents[1]

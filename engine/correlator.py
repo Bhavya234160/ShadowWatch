@@ -41,35 +41,26 @@ def sort_events_by_timestamp(events):
     return sorted(events, key=lambda x: x.get("timestamp", ""))
 
 def find_attack_chain(events):
-
     attack_chains = []
-
     port_scan = None
     ssh_failures = []
     file_event = None
 
     for event in events:
-
         if event["event_type"] == "port_scan":
             port_scan = event
-
         elif event["event_type"] == "ssh_failure":
             ssh_failures.append(event)
-
         elif event["event_type"] in FILE_EVENT_TYPES:
             file_event = event
-
         if ssh_failures and file_event:
-
             attack_chains.append({
                 "port_scan": port_scan,
                 "ssh_failures": ssh_failures.copy(),
                 "file_event": file_event
             })
-
             ssh_failures.clear()
             file_event = None
-
     return attack_chains
 
 def build_incident(attack_chain):
