@@ -26,7 +26,7 @@ This project was built as a cybersecurity learning project to understand how SIE
  Linux (Ubuntu & Kali)
 
 ## Project Structure
-
+```
 ShadowWatch/
 │
 ├── dashboard/
@@ -59,9 +59,10 @@ ShadowWatch/
 ├── controller.py
 │
 └── README.md
+```
 
 ## Workflow architecture
-
+```
                 +----------------+
                 |   Attacker     |
                 | Kali Linux/WSL |
@@ -86,6 +87,7 @@ ShadowWatch/
                  |
                  v
          Flask Dashboard
+```
 
 ## How It Works
 
