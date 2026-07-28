@@ -41,7 +41,7 @@ def convert_to_event(log_line):
         timestamp = timestamp.replace(year = datetime.now().year).astimezone().isoformat()
     else:
         timestamp = datetime.now().astimezone().isoformat()
-        event = {
+    event = {
             "event_type": "ssh_failure",
             "severity": "MEDIUM",
             "timestamp": timestamp,
@@ -51,7 +51,7 @@ def convert_to_event(log_line):
                 "details": "Failed SSH login attempt"
             }
         }
-    return event
+    return event    
 
 def main():
     lines = read_authlog(50)

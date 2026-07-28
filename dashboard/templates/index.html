@@ -1,19 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>ShadowWatch Dashboard</title>
 </head>
+
 <body>
+
     <h1>ShadowWatch Dashboard</h1>
-    <p>Total Incidents: {{total_incidents}}</p>
+    <!--Dashboard cards-->
+    <div class="dashboard">
+        <div class="card total">
+            <h3>Total Incidents</h3>
+            <p>{{ total_incidents }}</p>
+        </div>
+        <div class="card critical">
+            <h3>Critical</h3>
+            <p>{{ critical }}</p>
+        </div>
+        <div class="card high">
+            <h3>High</h3>
+            <p>{{ high }}</p>
+        </div>
+        <div class="card medium">
+            <h3>Medium</h3>
+            <p>{{ medium }}</p>
+        </div>
+        <div class="card low">
+            <h3>Low</h3>
+            <p>{{ low }}</p>
+        </div>
+    </div>
+
     <hr>
+
+    <form action="/scan" method="post">
+        <button type="submit">⚡ Scan System</button>
+    </form>
+    <hr>
+    <div class="scan-status">
+        <h3>Scan Results</h3>
+        <ul>
+            {% for msg in scan_status %}
+            <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="scan-status">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <hr>
+
+    <!--Incident cards-->
     {% for incident in incidents %}
-    <div>
+    <div class="incident-card {{ incident.severity|lower }}">
         <h3>{{ incident.incident_type }}</h3>
-        <p>Severity : {{incident.severity}}</p>
-        <p>Timestamp : {{incident.timstamp}}</p>
+        <p><strong>Severity:</strong> {{ incident.severity }}</p>
+        <p><strong>Timestamp:</strong> {{ incident.timestamp }}</p>
+        <p><strong>Description:</strong> {{ incident.metadata.description }}</p>
+        <p><strong>SSH Failures:</strong> {{ incident.metadata.number_of_ssh_failures }}</p>
+        <p><strong>File Event:</strong> {{ incident.metadata.file_event_type }}</p>
     </div>
     <hr>
     {% endfor %}
+
+    <!--Incident details-->
+
+    {% for incident in incidents %}
+    <div class="incident-details">
+        <h2>{{ incident.incident_type }}</h2>
+        <p><strong>Severity:</strong> {{ incident.severity }}</p>
+        <p><strong>Timestamp:</strong> {{ incident.timestamp }}</p>
+
+        <h3>Description</h3>
+        <p>{{ incident.description }}</p>
+
+        <h3>Attack Timeline</h3>
+        <ul class="timeline">
+            {% for event in incident.related_events %}
+            <li>{{ event.timestamp }} — {{ event.event_type }}</li>
+            {% endfor %}
+        </ul>
+
+        <div class="metadata">
+            <h3>Metadata</h3>
+            <ul>
+                {% for key, value in incident.metadata.items() %}
+                <li><strong>{{ key }}</strong>: {{ value }}</li>
+                {% endfor %}
+            </ul>
+        </div><a href="/incident/{{ loop.index0 }}">
+            View Details
+        </a>
+
+    </div>
+    <hr>
+    {% endfor %}
+
 </body>
+
 </html>

@@ -1,0 +1,52 @@
+ /*Dashboard card colors*/
+ .card.total { background-color: #333; color: white;}
+ .card.critical { background-color: #e74c3c; color: white;}
+ .card.high { background-color: #e67e22; color: white;}
+ .card.medium { background-color: #f1c40f; color: black;}
+ .card.low { background-color: #2ecc71; color: white;}
+
+  /*Layout tweaks*/
+  .dashboard  {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .card {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  /*Incident cards*/
+  .incident-card {
+    border: 1px solid #ddd;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  }
+
+  body{
+    background: #111827;
+    color: white;
+  }
+
+  body {
+  background-color: #121212;
+  color: #f0f0f0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.incident-card.critical { border-left: 6px solid #e74c3c; }
+.incident-card.high { border-left: 6px solid #e67e22; }
+.incident-card.medium { border-left: 6px solid #f1c40f; }
+.incident-card.low { border-left: 6px solid #2ecc71; }
+
+.timeline li::before {
+  content: "↓ ";
+  color: #888;
+}

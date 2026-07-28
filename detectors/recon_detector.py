@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import time
+import pytz
 from datetime import datetime
 from pathlib import Path
 import sys
@@ -70,10 +71,15 @@ def build_event(root):
 
     return [event]
 
-def main():
-    xml_file = "scan_results.xml"
+def main(xml_file=None):
+
+    if xml_file is None:
+        xml_file = ROOT / "recon" / "scan_results.xml"
+
     root = read_xml(xml_file)
+
     events = build_event(root)
+
     for event in events:
         accept_event(event)
 
